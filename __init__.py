@@ -49,8 +49,17 @@ def logout():
 
 app.secret_key = 'victorhernandez'
 
-@app.route('/login')
+@app.route('/login', methods=["POST", "GET"])
 def login():
-    return "hola"
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        query = g.db.execute('SELECT * FROM USERS WHERE (USERNAME == ? OR\
+                USERNAME == ?) AND PASSWORD = ?;', [username, username, password]).fetchall()
+        print(query)
+        return "login"
+    else:
+        return render_template('login.html')
+
 
 app.run(debug=True)
